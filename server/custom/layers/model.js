@@ -26,7 +26,7 @@ LayersSchema.statics.setStatus = function (req, done) {
             if (err) { console.error(err); }
 
             if (findLayer) {
-                Layers.update({
+                Layers.updateOne({
                     '_id': layerID
                 }, {
                     $set: {

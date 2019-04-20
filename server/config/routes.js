@@ -29,7 +29,7 @@ module.exports = function (app, passport) {
         var Users = connection.model('Users');
         var Companies = connection.model('Companies');
 
-        Users.count({}, function (err, c) {
+        Users.countDocuments({}, function (err, c) {
             if (err) throw err;
 
             if (c === 0) {
@@ -99,7 +99,7 @@ function authenticate (passport, Users, req, res, next) {
                 } else {
                     user.companyData = company;
 
-                    Users.update({
+                    Users.updateOne({
                         '_id': user._id
                     }, {
                         $set: loginData
