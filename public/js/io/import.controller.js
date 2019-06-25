@@ -8,13 +8,13 @@
     function ImportController ($scope, $q, gettext, api) {
         const vm = this;
 
+        vm.checkError = undefined;
+        vm.checkingFile = false;
         vm.checkProgressValue = 0;
         vm.checkProgressMax = 100;
-        vm.checkingFile = true;
         vm.datasourceMatch = {};
         vm.doImport = doImport;
         vm.importBundle = undefined;
-        vm.importFile = undefined;
         vm.importProgressValue = 0;
         vm.importProgressMax = 100;
         vm.importStarted = false;
@@ -36,7 +36,7 @@
                 return;
             }
 
-            vm.step = 2;
+            vm.checkError = undefined;
             vm.checkingFile = true;
             vm.importBundle = undefined;
             vm.importStarted = false;
@@ -47,13 +47,13 @@
             fileReader.readAsText(file);
             fileReader.onload = function () {
                 try {
-                    vm.importFile = JSON.parse(fileReader.result);
-                    if (!(vm.importFile.layers && vm.importFile.reports &&
-                        vm.importFile.datasources && vm.importFile.dashboards)) {
-                        throw new Error('missing fields');
+                    const importFile = JSON.parse(fileReader.result);
+                    if (!(importFile.layers && importFile.reports &&
+                        importFile.datasources && importFile.dashboards)) {
+                        throw new Error(gettext('File must contain the following properties: datasources, layers, reports and dashboards'));
                     }
 
-                    checkImportFile(vm.importFile).then(importBundle => {
+                    checkImportFile(importFile).then(importBundle => {
                         vm.checkingFile = false;
 
                         for (const datasource of importBundle.datasources) {
@@ -61,12 +61,12 @@
                         }
 
                         vm.importBundle = importBundle;
+                        vm.step = 2;
                         $scope.$digest();
                     });
                 } catch (err) {
-                    console.log('invalid file format');
-                    console.log(err);
-                    vm.importFile = undefined;
+                    vm.checkingFile = false;
+                    vm.checkError = err;
                     $scope.$digest();
                 }
             };

@@ -12,14 +12,20 @@
             <h4 translate>Step 1 - Choose file to import</h4>
             <div class="btn btn-default" ngf-select="vm.upload($file)" translate>Select file...</div>
 
+            <div ng-if="vm.checkingFile">
+                <i class="fa fa-spinner fa-fw fa-spin"></i>
+                <span translate>Checking file</span>
+
+                <uib-progressbar value="vm.checkProgressValue" max="vm.checkProgressMax"></uib-progressbar>
+            </div>
+
+            <p ng-if="vm.checkError" class="text-danger">
+                <span translate>Error:</span>
+                <span>{{ vm.checkError.message | translate }}</span>
+            </p>
+
             <div ng-if="vm.step >= 2">
                 <h4 translate>Step 2 - Confirm import</h4>
-                <div ng-if="vm.checkingFile">
-                    <i class="fa fa-spinner fa-fw fa-spin"></i>
-                    <span translate>Checking file</span>
-
-                    <uib-progressbar value="vm.checkProgressValue" max="vm.checkProgressMax"></uib-progressbar>
-                </div>
 
                 <form ng-if="vm.importBundle" name="vm.form" ng-submit="vm.doImport()" novalidate>
                     <details ng-open="!vm.importStarted">
