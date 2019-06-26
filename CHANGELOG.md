@@ -36,6 +36,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Remove import error messages that were false positives
 - A lot of minor issues raised by LGTM
 - Wrong use of GROUP BY when the query does not use aggregation
+- Date filters (between, not between, is null, is not null)
 
 ## [1.0.1] - 2019-05-03
 
